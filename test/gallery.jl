@@ -4,8 +4,8 @@ using GMT
 
 # When calling the gallery() function directly and with only one argument, one need to edit
 # these two for own paths. Otherwise this same job is done in gmtest()
-global g_root_dir = "C:/progs_cygw/GMTdev/gmt5/trunk/"
-global out_path = "V:/"			# Leave it empty to write files in current directory
+global g_root_dir = joinpath(homedir(), "juliastuff", "gmt5-dev/")
+global out_path = ""			# Leave it empty to write files in current directory
 
 # -----------------------------------------------------------------------------------------------------
 function gallery(opt::String)
@@ -121,9 +121,9 @@ function ex02(g_root_dir, out_path)
 end
 
 # -----------------------------------------------------------------------------------------------------
-function ex03(g_root_dir, out_path)	
-	# Purpose:   
-	# GMT progs: 
+function ex03(g_root_dir, out_path)
+	# Purpose:
+	# GMT progs:
 
 	d_path = g_root_dir * "doc/examples/ex03/"
 	ps = out_path * "example_03.ps"
@@ -131,7 +131,7 @@ function ex03(g_root_dir, out_path)
 	gmt("destroy")
 	gmt("gmtset -Du")
 	gmt("destroy")
-	
+
 	cpos  = gmt("fitcircle " * d_path * "sat.xyg -L2 -Fm")
 	cposx = cpos[1].data[1,1];		cposy = cpos[1].data[1,2]
 	ppos  = gmt("fitcircle " * d_path * "sat.xyg -L2 -Fn")
@@ -147,9 +147,9 @@ function ex03(g_root_dir, out_path)
 	sat_pg  = sat_pg[1].data;
 	ship_pg = ship_pg[1].data;
 
-	# The gmtinfo utility will report the minimum and maximum values for all columns. 
+	# The gmtinfo utility will report the minimum and maximum values for all columns.
 	# We use this information first with a large -I value to find the appropriate -R
-	# to use to plot the .pg data. 
+	# to use to plot the .pg data.
 	R = gmt("gmtinfo -I100/25", [sat_pg; ship_pg])
 	R = R[1].text[1]
 	gmt("psxy " * R * " -UL/-1.75i/-1.25i/\"Example 3a in Cookbook\" -BWeSn" *
@@ -205,13 +205,13 @@ function ex03(g_root_dir, out_path)
 		" -BWeSn -UL/-1.75i/-1.25i/\"Example 3c in Cookbook\" > " * ps, samp_sat_pg)
 	gmt("psxy -R -JX -O -Sp0.03i >> " * ps, samp_ship_pg)
 
-	# Now to do the cross-spectra, assuming that the ship is the input and the sat is the output 
+	# Now to do the cross-spectra, assuming that the ship is the input and the sat is the output
 	# data, we do this:
 	t = [samp_ship_pg[1].data[:,2] samp_sat_pg[1].data[:,2]]
 	spects = gmt("spectrum1d -S256 -D1 -W -C -N", t)
- 
-	# Now we want to plot the spectra. The following commands will plot the ship and sat 
-	# power in one diagram and the coherency on another diagram, both on the same page.  
+
+	# Now we want to plot the spectra. The following commands will plot the ship and sat
+	# power in one diagram and the coherency on another diagram, both on the same page.
 	# Note the extended use of gmt pstext and gmt psxy to put labels and legends directly on the
 	# plots. For that purpose we often use -Jx1i and specify positions in inches directly:
 
@@ -219,7 +219,7 @@ function ex03(g_root_dir, out_path)
 
 	gmt("psxy -Bxa1f3p+l\"Wavelength (km)\" -Bya0.25f0.05+l\"Coherency@+2@+\" -BWeSn+g240/255/240" *
 		" -JX-4il/3.75i -R1/1000/0/1 -P -K -X2.5i -Sc0.07i -Gpurple -Ey/0.5p -Y1.5i > " * ps, spects[1].data[:,[1,16,17]])
-	
+
 	gmt("pstext -R -J -F+cTR+f18p,Helvetica-Bold -Dj0.1i -O -K >> " * ps, "Coherency@+2@+")
 	gmt("psxy -Bxa1f3p -Bya1f3p+l\"Power (mGal@+2@+km)\" -BWeSn+t\"Ship and Satellite Gravity\"+g240/255/240" *
 		" -Gred -ST0.07i -O -R1/1000/0.1/10000 -JX-4il/3.75il -Y4.2i -K -Ey/0.5p >> " * ps, spects[1].data[:,1:3])
@@ -249,7 +249,7 @@ function ex03(g_root_dir, out_path)
 end
 
 # -----------------------------------------------------------------------------------------------------
-function ex04(g_root_dir, out_path)	
+function ex04(g_root_dir, out_path)
 	# Purpose:   3-D mesh and color plot of Hawaiian topography and geoid
 	# GMT progs: grdcontour, grdgradient, grdimage, grdview, psbasemap, pscoast, pstext
 
@@ -258,7 +258,7 @@ function ex04(g_root_dir, out_path)
 
 	gmt("gmtset -Du")
 	gmt("destroy")
-	
+
 	fid = open("zero.cpt","w")
 	println(fid, "-10  255   0  255")
 	println(fid, "0  100  10  100")
@@ -435,9 +435,9 @@ function ex10(g_root_dir, out_path)
 end
 
 # -----------------------------------------------------------------------------------------------------
-function ex11(g_root_dir, out_path)	
-	# Purpose:   
-	# GMT progs: 
+function ex11(g_root_dir, out_path)
+	# Purpose:
+	# GMT progs:
 
 	d_path = g_root_dir * "doc/examples/ex11/"
 	ps = out_path * "example_11.ps"
@@ -672,9 +672,9 @@ function ex15(g_root_dir, out_path)
 end
 
 # -----------------------------------------------------------------------------------------------------
-function ex16(g_root_dir, out_path)	
-	# Purpose:   
-	# GMT progs: 
+function ex16(g_root_dir, out_path)
+	# Purpose:
+	# GMT progs:
 
 	d_path = g_root_dir * "doc/examples/ex16/"
 	ps = out_path * "example_16.ps"
@@ -769,7 +769,7 @@ function ex18(g_root_dir, out_path)
 		" -Y5.85i > " * ps, GAK_gulf_grav_i, grav_cpt)
 	gmt("pscoast -R" * d_path * "AK_gulf_grav.nc -J -O -K -Di -Ggray -Wthinnest >> " * ps)
 	gmt("psscale -DJBC+o0/0.4i+w4i/0.15i+h -R -J -C -Bx20f10 -By+l\"mGal\" -O -K >> " * ps, grav_cpt)
-	gmt("pstext -R -J -O -K -D0.1i/0.1i -F+f12p,Helvetica-Bold+jLB >> " * ps, 
+	gmt("pstext -R -J -O -K -D0.1i/0.1i -F+f12p,Helvetica-Bold+jLB >> " * ps,
 		@sprintf("%f %f Pratt", pratt[1], pratt[2]))
 	gmt("psxy -R -J -O -K -SE- -Wthinnest >> " * ps, pratt)
 
@@ -892,9 +892,9 @@ function ex20(g_root_dir, out_path)
 end
 
 # -----------------------------------------------------------------------------------------------------
-function ex21(g_root_dir, out_path)	
-	# Purpose:   
-	# GMT progs: 
+function ex21(g_root_dir, out_path)
+	# Purpose:
+	# GMT progs:
 
 	d_path = g_root_dir * "doc/examples/ex21/"
 	ps = out_path * "example_21.ps"
@@ -991,16 +991,16 @@ function ex22(g_root_dir, out_path)
 
 	# Get the data (-q quietly) from USGS using the wget (comment out in case
 	# your system does not have wget or curl)
-	# 
+	#
 	# wget http://neic.usgs.gov/neis/gis/bulletin.asc -q -O neic_quakes.txt
 	# curl http://neic.usgs.gov/neis/gis/bulletin.asc -s > neic_quakes.txt
-	# 
+	#
 	# Count the number of events (to be used in title later. one less due to header)
 
 	# n=`cat neic_quakes.txt | wc -l`
 	# n=`expr $n - 1`
 	n = 77
-	
+
 	# Pull out the first and last timestamp to use in legend title
 
 	# first=`sed -n 2p neic_quakes.txt | awk -F, '{printf "%s %s\n", $1, $2}'`
@@ -1061,7 +1061,7 @@ function ex22(g_root_dir, out_path)
 	 "I " * d_path * "USGS.ras 1i RT"
 	 "G -0.3i"
 	 @sprintf("L 12 6 LB %s", me)];
-	 
+
 	# OK, now we can actually run gmt pslegend.  We center the legend below the map.
 	# Trial and error shows that 1.7i is a good legend height:
 
@@ -1090,11 +1090,11 @@ function ex23(g_root_dir, out_path)
 	gmt("destroy")
 	Gdist = gmt(@sprintf("grdmath -Rg -I1 %f %f SDIST", lon, lat))
 
-	gmt("pscoast -Rg -JH90/9i -Glightgreen -Sblue -A1000 -Dc -Bg30 -B+t\"Distances from " * 
+	gmt("pscoast -Rg -JH90/9i -Glightgreen -Sblue -A1000 -Dc -Bg30 -B+t\"Distances from " *
 		name * " to the World\" -K -Wthinnest > " * ps)
 	gmt("grdcontour -A1000+v+u\" km\"+fwhite -Glz-/z+ -S8 -C500 -O -K -JH90/9i -Wathin,white " *
 		"-Wcthinnest,white,- >> " * ps, Gdist)
-	
+
 	# Location info for 5 other cities + label justification
 	cities = Array(Any, 5)
 	cities[1] = "105.87 21.02 LM HANOI"
@@ -1176,7 +1176,7 @@ function ex25(g_root_dir, out_path)
 	# Create D minutes global grid with -1 over oceans and +1 over land
 	d_path = g_root_dir * "doc/examples/ex25/"
 	ps = out_path * "example_25.ps"
-	
+
 	D  = 30
 
 	gmt("gmtset -Du")
@@ -1218,7 +1218,7 @@ function ex25(g_root_dir, out_path)
 		@sprintf("S 0.15i s 0.2i red  0.25p 0.3i Terrestrial Antipodes [%d %%]", land[1].data[1])
 		@sprintf("S 0.15i s 0.2i blue 0.25p 0.3i Oceanic Antipodes [%d %%]", ocean[1].data[1])
 		@sprintf("S 0.15i s 0.2i gray 0.25p 0.3i Mixed Antipodes [%d %%]", mixed[1].data[1])])
-	
+
 	rm("gmt.conf")
 	return ps, d_path
 end
@@ -1309,7 +1309,7 @@ function ex28(g_root_dir, out_path)
 	gmt("psbasemap -R -J -O -K --FONT_ANNOT_PRIMARY=9p -Lg155:07:30W/19:15:40N+c19:23N+jTC+f+w5k+l1:16,000+u" *
 		" --FONT_LABEL=10p >> " * ps)
 	# Annotate in km but append ,000m to annotations to get customized meter labels
-	gmt("psbasemap -R" * d_path * "Kilauea.utm.nc+Uk -Jx1:160 -B5g5+u\"@:8:000m@::\"" * 
+	gmt("psbasemap -R" * d_path * "Kilauea.utm.nc+Uk -Jx1:160 -B5g5+u\"@:8:000m@::\"" *
 		" -BWSne -O --FONT_ANNOT_PRIMARY=10p --MAP_GRID_CROSS_SIZE_PRIMARY=0.1i --FONT_LABEL=10p >> " * ps)
 	rm("gmt.conf")
 	return ps, d_path
@@ -1335,7 +1335,7 @@ function ex29(g_root_dir, out_path)
 	# It doesn't let me break the @sprintf call !!!
 	gmt("gmtset -Du")
 	gmt("destroy")
-	Gproj_ellipsoid = gmt("grdmath -Rg -I4 -r X COSD " * "$a" * " DIV DUP MUL X SIND " * "$b" * 
+	Gproj_ellipsoid = gmt("grdmath -Rg -I4 -r X COSD " * "$a" * " DIV DUP MUL X SIND " * "$b" *
 		" DIV DUP MUL ADD Y COSD DUP MUL MUL Y SIND " * "$c" * " DIV DUP MUL ADD SQRT INV =")
 	#  Do both Parker and Wessel/Becker solutions (tension = 0.9975)
 	Gmars  = gmt("greenspline -R? " * d_path * "mars370.txt -D4 -Sp -G", Gproj_ellipsoid);
@@ -1430,9 +1430,9 @@ function ex30(g_root_dir, out_path)
 end
 
 # -----------------------------------------------------------------------------------------------------
-function ex31(g_root_dir, out_path)	
-	# Purpose:   
-	# GMT progs: 
+function ex31(g_root_dir, out_path)
+	# Purpose:
+	# GMT progs:
 
 	d_path = g_root_dir * "doc/examples/ex31/"
 	ps = out_path * "example_31.ps"
@@ -1660,7 +1660,7 @@ function ex37(g_root_dir, out_path)
 	gmt("grdimage grav.V18.par.surf.1km.sq_tmp.nc -I -Jx" * scl *"i -C -O -K -X3.25i >> " * ps, GG_tmp_int, g_cpt)
 	gmt("psxy -Rgrav.V18.par.surf.1km.sq_tmp.nc -J -O -K -L -W0.5p,- >> " * ps, bbox)
 	gmt("psbasemap -R-100/91/-94/97 -Jx" * sclkm *"i -O -K -Ba -BWSne+t\"Detrended and extended\" >> " * ps)
- 
+
 	gmt("psxy -R2/160/0/1 -JX-6il/2.5i -Bxa2f3g3+u\" km\" -Byafg0.5+l\"Coherency@+2@+\"" *
 		" -BWsNe+t\"Coherency between gravity and bathymetry\" -O -K -X-3.25i -Y3.3i -i0,15 -W0.5p --FONT_TITLE=24p >> " * ps, cross)
 	gmt("psxy -R -J -O -K -i0,15,16 -Sc0.075i -Gred -W0.25p -Ey >> " * ps, cross)
@@ -1755,7 +1755,7 @@ function ex40(g_root_dir, out_path)
 	T500k = gmt("gmtsimplify " * d_path * "GSHHS_h_Australia.txt -T500k");
 	t = gmt("gmtspatial " * d_path * "GSHHS_h_Australia.txt -fg -Qk");
 	area = @sprintf("Full area = %.0f km@+2@+", t[1].data[3]);
-	t = gmt("gmtspatial -fg -Qk", T500k); 
+	t = gmt("gmtspatial -fg -Qk", T500k);
 	area_T500k = @sprintf("Reduced area = %.0f km@+2@+", t[1].data[3]);
 	gmt("psxy -R -J -O -K -W1p,blue >> " * ps, T500k)
 	gmt("psxy -R -J -O -K -Sx0.3i -W3p >> " * ps, centroid)
@@ -1844,9 +1844,9 @@ function ex42(g_root_dir, out_path)
 end
 
 # -----------------------------------------------------------------------------------------------------
-function ex43(g_root_dir, out_path)	
-	# Purpose:   
-	# GMT progs: 
+function ex43(g_root_dir, out_path)
+	# Purpose:
+	# GMT progs:
 
 	d_path = g_root_dir * "doc/examples/ex43/"
 	ps = out_path * "example_43.ps"

@@ -1,7 +1,7 @@
 # Julia wrapper for header: /cmn/ext/gmt/gmt-5.1.1/src/gmt.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-@static is_windows() ? (const thelib = "V:/build/src/gmt_w64") : (const thelib = "libgmt")  # Name of GMT shared lib.
+@static is_windows() ? (const thelib = "V:/build/src/gmt_w64") : (const thelib = "/usr/local/lib/libgmt.so")  # Name of GMT shared lib.
 #@windows? (const thelib = "V:/build/src/gmt_w64") : (const thelib = "libgmt")  # Name of GMT shared lib.
 #@windows? (const thelib = "gmt_w64") : (const thelib = "libgmt")  # Name of GMT shared lib.
 
@@ -175,7 +175,7 @@ function GMT_Create_Options(API::Ptr{Void}, argc::Integer, args)
 	# VERSATILIZAR PARA O CASO DE ARGS SER STRING OU ARRAY DE STRINGS
 	ccall((:GMT_Create_Options, thelib), Ptr{GMT_OPTION}, (Ptr{Void}, Cint, Ptr{Void}), API, argc, args)
 end
-GMT_Create_Options(API::Ptr{Void}, argc::Integer, args::String) = 
+GMT_Create_Options(API::Ptr{Void}, argc::Integer, args::String) =
                    GMT_Create_Options(API, argc, convert(Ptr{Void},pointer(args)))
 
 function GMT_Make_Option(API::Ptr{Void}, option::UInt8, arg::Ptr{UInt8})
@@ -366,7 +366,7 @@ function GMT_Get_Matrix(API::Ptr{Void}, M::Ptr{GMT_MATRIX})
 	ccall((:GMT_Get_Matrix, thelib), Ptr{Void}, (Ptr{Void}, Ptr{GMT_MATRIX}), API, M)
 end
 
- 
+
 # ------------------ Backwards compatibility for old API functions no longer in favor -------------------------
 function GMT_Retrieve_Data(API::Ptr{Void}, object_ID::Integer)
 	ccall((:GMT_Retrieve_Data, thelib), Ptr{Void}, (Ptr{Void}, Cint), API, object_ID)
